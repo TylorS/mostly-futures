@@ -1,9 +1,12 @@
-import { Future, create } from '../'
+import { Future, chain, of } from '../'
+import { curry2, pipe } from '167'
 
-import { pipe } from '167'
+export const map: Map = curry2(<A, B, C>(f: (value: B) => C, future: Future<A, B>): Future<A, C> =>
+  chain(pipe(f, of), future)
+)
 
-export function map<A, B>(f: (value: A) => B, future: Future<A>) {
-  const { fork } = future
-
-  return create<B>((resolve, reject) => fork().then(pipe(f, resolve)).catch(reject))
+export interface Map {
+  <A, B, C>(f: (value: B) => C, future: Future<A, B>): Future<A, C>
+  <A, B, C>(f: (value: B) => C): (future: Future<A, B>) => Future<A, C>
+  <B, C>(f: (value: B) => C): <A>(future: Future<A, B>) => Future<A, C>
 }

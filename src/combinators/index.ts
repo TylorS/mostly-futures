@@ -1,3 +1,5 @@
 export * from './ap'
 export * from './chain'
+export * from './fork'
 export * from './map'
+export * from './toPromise'
